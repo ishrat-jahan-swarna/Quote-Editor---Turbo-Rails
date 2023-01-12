@@ -9,4 +9,9 @@ class Quote < ApplicationRecord
     # after_update_commit -> { broadcast_replace_later_to "quotes" }
     # after_destroy_commit -> { broadcast_remove_to "quotes" }
     broadcasts_to ->(quote) { [quote.company, "quotes"] }, inserts_by: :prepend
+
+    has_many:line_items, through: :line_item_dates
+    def total_price
+        line_items.sum(&:total_price)
+    end
 end
